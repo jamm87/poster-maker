@@ -1,0 +1,43 @@
+[project]
+name = "posterengine"
+version = "0.1.0"
+description = "Motor de render de pósters de mapas (derivado de originalankur/maptoposter, MIT)"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "osmnx==2.0.7",
+    "geopandas==1.1.2",
+    "shapely==2.1.2",
+    "pyproj==3.7.2",
+    "matplotlib==3.10.8",
+    "numpy==2.4.0",
+    "networkx==3.6.1",
+    "requests==2.32.5",
+    "pydantic>=2.9,<3",
+    "psycopg[binary]>=3.2,<4",
+    "boto3>=1.35,<2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6", "pillow>=11"]
+
+[project.scripts]
+posterengine = "posterengine.cli:main"
+posterengine-worker = "posterengine.worker:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/posterengine"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

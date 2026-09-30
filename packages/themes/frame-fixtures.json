@@ -1,0 +1,61 @@
+{
+ "$comment": "bbox [W,S,E,N] del \u00e1rea de corte (sin margen) para centro + ancho en metros. Generado con posterengine.frame; tolerancia 0,5 %.",
+ "cases": [
+  {
+   "name": "madrid-30x40",
+   "lat": 40.4168,
+   "lon": -3.7038,
+   "widthMeters": 6000,
+   "trimW": 300,
+   "trimH": 400,
+   "bbox": [
+    -3.739166,
+    40.380772,
+    -3.668434,
+    40.452817
+   ]
+  },
+  {
+   "name": "oslo-landscape",
+   "lat": 59.9139,
+   "lon": 10.7522,
+   "widthMeters": 12000,
+   "trimW": 400,
+   "trimH": 300,
+   "bbox": [
+    10.644821,
+    59.873465,
+    10.859579,
+    59.954247
+   ]
+  },
+  {
+   "name": "sydney-a4",
+   "lat": -33.8688,
+   "lon": 151.2093,
+   "widthMeters": 9000,
+   "trimW": 210,
+   "trimH": 297,
+   "bbox": [
+    151.160633,
+    -33.926167,
+    151.257967,
+    -33.811413
+   ]
+  },
+  {
+   "name": "quito-50x70",
+   "lat": -0.1807,
+   "lon": -78.4678,
+   "widthMeters": 20000,
+   "trimW": 500,
+   "trimH": 700,
+   "bbox": [
+    -78.557633,
+    -0.307311,
+    -78.377967,
+    -0.054088
+   ]
+  }
+ ]
+}

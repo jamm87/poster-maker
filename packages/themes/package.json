@@ -1,0 +1,9 @@
+{
+  "name": "@poster/themes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Temas, formatos y maquetación compartidos por la web y el motor de render",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts"
+}

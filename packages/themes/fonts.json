@@ -1,0 +1,20 @@
+{
+  "$comment": "Tipografías disponibles (Google Fonts). 'Roboto' se sirve local desde fonts/.",
+  "default": "Roboto",
+  "fonts": [
+    { "family": "Roboto", "scripts": ["latin"] },
+    { "family": "Montserrat", "scripts": ["latin"] },
+    { "family": "Playfair Display", "scripts": ["latin"] },
+    { "family": "Lora", "scripts": ["latin"] },
+    { "family": "Josefin Sans", "scripts": ["latin"] },
+    { "family": "Oswald", "scripts": ["latin"] },
+    { "family": "Raleway", "scripts": ["latin"] },
+    { "family": "Cormorant Garamond", "scripts": ["latin"] },
+    { "family": "Space Mono", "scripts": ["latin"] },
+    { "family": "Noto Sans JP", "scripts": ["cjk"] },
+    { "family": "Noto Sans KR", "scripts": ["cjk"] },
+    { "family": "Noto Sans SC", "scripts": ["cjk"] },
+    { "family": "Cairo", "scripts": ["arabic"] },
+    { "family": "Noto Sans Thai", "scripts": ["thai"] }
+  ]
+}

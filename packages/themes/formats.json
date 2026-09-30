@@ -1,0 +1,20 @@
+{
+  "$comment": "Formatos de póster (medidas en vertical). Fuente única para web y renderer. printDpi = resolución del archivo de impresión; bleedMm = sangrado por lado que se añade al archivo físico (verificar con las especificaciones de Gelato de cada producto).",
+  "printDpi": 300,
+  "formats": [
+    { "id": "a4",      "label": "A4 (21 × 29,7 cm)", "widthCm": 21.0, "heightCm": 29.7, "pngDpi": 300, "pdf": false },
+    { "id": "a3",      "label": "A3 (29,7 × 42 cm)", "widthCm": 29.7, "heightCm": 42.0, "pngDpi": 300, "pdf": false },
+    { "id": "30x40",   "label": "30 × 40 cm",        "widthCm": 30.0, "heightCm": 40.0, "pngDpi": 300, "pdf": false },
+    { "id": "40x50",   "label": "40 × 50 cm",        "widthCm": 40.0, "heightCm": 50.0, "pngDpi": 300, "pdf": false },
+    { "id": "50x70",   "label": "50 × 70 cm",        "widthCm": 50.0, "heightCm": 70.0, "pngDpi": 300, "pdf": false },
+    { "id": "70x100",  "label": "70 × 100 cm",       "widthCm": 70.0, "heightCm": 100.0, "pngDpi": 200, "pdf": true }
+  ],
+  "finishes": [
+    { "id": "digital", "physical": false, "bleedMm": 0 },
+    { "id": "paper",   "physical": true,  "bleedMm": 4 },
+    { "id": "framed",  "physical": true,  "bleedMm": 4 },
+    { "id": "canvas",  "physical": true,  "bleedMm": 0 },
+    { "id": "hanger",  "physical": true,  "bleedMm": 4 }
+  ],
+  "previewLongSidePx": { "preview": 900, "proof": 1600 }
+}

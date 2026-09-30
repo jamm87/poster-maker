@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f5f2ed;
+  --color-ink: #1c1b19;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:border-stone-900;
+  }
+  .label {
+    @apply mb-1 block text-xs text-stone-600;
+  }
+  .btn-primary {
+    @apply rounded bg-stone-900 px-5 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-secondary {
+    @apply rounded border border-stone-900 px-4 py-2 text-sm transition hover:bg-stone-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+  .prose-legal h2 {
+    @apply mb-2 mt-8 text-lg font-semibold;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    @apply mb-3 text-sm leading-relaxed text-stone-700;
+  }
+  .prose-legal ul {
+    @apply list-disc pl-6;
+  }
+}

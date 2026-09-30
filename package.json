@@ -1,0 +1,13 @@
+{
+  "name": "poster-maker",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "pnpm --filter @poster/web dev",
+    "build": "pnpm --filter @poster/web build",
+    "test": "pnpm --filter @poster/web test",
+    "typecheck": "pnpm --filter @poster/web typecheck",
+    "db:migrate": "pnpm --filter @poster/web db:migrate",
+    "db:seed": "pnpm --filter @poster/web db:seed"
+  }
+}
