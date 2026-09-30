@@ -1,0 +1,85 @@
+# Tienda completa en un servidor: Postgres + migraciones + web + worker de render.
+#   cp .env.example .env   (y rellénalo)
+#   docker compose -f infra/docker-compose.yml --env-file .env up -d --build
+# Coolify puede desplegar este mismo archivo (tipo «Docker Compose»).
+name: poster-maker
+
+x-common-env: &common-env
+  DATABASE_URL: postgres://poster:${POSTGRES_PASSWORD:?define POSTGRES_PASSWORD}@postgres:5432/poster
+  INTERNAL_API_SECRET: ${INTERNAL_API_SECRET:?define INTERNAL_API_SECRET}
+  STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+  STORAGE_LOCAL_DIR: /data/files
+  S3_ENDPOINT: ${S3_ENDPOINT:-}
+  S3_REGION: ${S3_REGION:-auto}
+  S3_BUCKET: ${S3_BUCKET:-}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: poster
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: poster
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U poster -d poster"]
+      interval: 5s
+      retries: 20
+
+  migrate:
+    build: { context: .., dockerfile: apps/web/Dockerfile, target: builder }
+    environment: *common-env
+    command: sh -c "pnpm --filter @poster/web db:migrate && pnpm --filter @poster/web db:seed -- --previews"
+    depends_on: { postgres: { condition: service_healthy } }
+    restart: "no"
+
+  web:
+    build: { context: .., dockerfile: apps/web/Dockerfile }
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?define PUBLIC_BASE_URL}
+      BRAND_NAME: ${BRAND_NAME:-Trazado}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-}
+      APP_SECRET: ${APP_SECRET:?define APP_SECRET}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?define ADMIN_PASSWORD}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      GELATO_API_KEY: ${GELATO_API_KEY:-}
+      GELATO_ORDER_TYPE: ${GELATO_ORDER_TYPE:-draft}
+      GELATO_WEBHOOK_SECRET: ${GELATO_WEBHOOK_SECRET:?define GELATO_WEBHOOK_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      SHIPPING_ES_CENTS: ${SHIPPING_ES_CENTS:-490}
+      SHIPPING_EU_CENTS: ${SHIPPING_EU_CENTS:-990}
+      DOWNLOAD_DAYS: ${DOWNLOAD_DAYS:-30}
+      GEOCODER_URL: ${GEOCODER_URL:-https://photon.komoot.io/api/}
+      ALLOW_SIMULATED_CHECKOUT: ${ALLOW_SIMULATED_CHECKOUT:-false}
+    volumes: [files:/data/files]
+    ports: ["${WEB_PORT:-3000}:3000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  worker:
+    build: { context: .., dockerfile: services/renderer/Dockerfile }
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      WEB_INTERNAL_URL: http://web:3000
+      OSM_USER_AGENT: ${OSM_USER_AGENT:-poster-maker}
+      OVERPASS_URL: ${OVERPASS_URL:-}
+      POSTER_DATA_PROVIDER: ${POSTER_DATA_PROVIDER:-osmnx}
+      WATERMARK_TEXT: ${WATERMARK_TEXT:-VISTA PREVIA}
+    volumes: [files:/data/files, osmcache:/cache]
+    # El render de 70×100 y ciudades grandes necesitan memoria; con 8 GB en el VPS, 1 worker es lo seguro.
+    mem_limit: 5g
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+volumes:
+  pgdata:
+  files:
+  osmcache:

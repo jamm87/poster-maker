@@ -1,5 +1,6 @@
 import { and, eq, lt, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
+import { redirectTo } from "@/lib/http";
 import { signedFileUrl } from "@/lib/storage";
 
 /** Descarga de un producto digital: comprueba token del pedido, caducidad y límite; redirige a URL firmada. */
@@ -27,5 +28,5 @@ export async function GET(req: Request, { params }: { params: Promise<{ token: s
 
   const slug = row.item.title.normalize("NFD").replace(/[^\w]+/g, "-").replace(/^-|-$/g, "").toLowerCase() || "poster";
   const url = await signedFileUrl(file.key, { ttlSeconds: 300, downloadName: `${slug}-${row.item.formatId}.${kind}` });
-  return Response.redirect(new URL(url, req.url), 302);
+  return redirectTo(url, 302);
 }

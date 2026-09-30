@@ -2,6 +2,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { getFormat, isPhysical } from "./assets";
 import { db, schema } from "./db";
+import { env } from "./env";
 import { getPriceTable, priceFor } from "./pricing";
 import type { PosterSpec } from "./spec";
 
@@ -43,7 +44,7 @@ export async function ensureCart(locale: string): Promise<string> {
   (await cookies()).set(CART_COOKIE, cart.id, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: env().PUBLIC_BASE_URL.startsWith("https://"),
     maxAge: 60 * 60 * 24 * 30,
     path: "/",
   });
