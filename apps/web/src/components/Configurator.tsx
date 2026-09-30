@@ -362,7 +362,11 @@ export function Configurator({
                   key={f.id}
                   className={`flex cursor-pointer items-center gap-3 rounded border p-3 ${finishId === f.id ? "border-stone-900" : "border-stone-200"} ${available ? "" : "cursor-not-allowed opacity-50"}`}
                 >
-                  <input type="radio" name="finish" value={f.id} checked={finishId === f.id} disabled={!available} onChange={() => setFinishId(f.id)} />
+                  <input type="radio" name="finish" value={f.id} checked={finishId === f.id} disabled={!available} onChange={() => {
+                      setFinishId(f.id);
+                      setCartState("idle");
+                    }}
+                  />
                   <span className="flex-1">
                     <span className="block text-sm font-medium">{t(`finishes.${f.id}.name` as never)}</span>
                     <span className="block text-xs text-stone-500">{available ? t(`finishes.${f.id}.text` as never) : t("configurator.unavailable")}</span>

@@ -6,7 +6,8 @@ const LOCALES = ["es", "en"];
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  if (pathname === "/admin/login") return NextResponse.next();
+  if (pathname.startsWith("/admin")) {
     const ok = await verifyAdminSession(req.cookies.get(ADMIN_COOKIE)?.value, process.env.APP_SECRET ?? "dev-secret-change-me-please");
     if (!ok) return NextResponse.redirect(new URL("/admin/login", req.url));
     return NextResponse.next();

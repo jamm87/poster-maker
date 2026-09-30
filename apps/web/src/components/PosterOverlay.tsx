@@ -7,6 +7,9 @@ import type { PosterSpec } from "@/lib/spec";
  * Capa de tipografía y degradados sobre el mapa, con la misma maquetación que el renderer Python
  * (packages/themes/layout.json). width/height = tamaño en px del área de corte en pantalla.
  */
+// Conserva los espacios (el título latino se espacia con dos espacios entre letras, como en el renderer)
+const PRE = { whiteSpace: "pre" } as const;
+
 export function PosterOverlay({
   spec,
   palette,
@@ -51,22 +54,23 @@ export function PosterOverlay({
       </defs>
       <rect x="0" y={height - gh} width={width} height={gh} fill="url(#fade-bottom)" />
       <rect x="0" y="0" width={width} height={gh} fill="url(#fade-top)" />
-      <g fill={palette.text} textAnchor="middle" style={{ whiteSpace: "pre" }}>
-        <text x={width / 2} y={y(layout.title.y)} fontSize={size(titleSizeFrac(t.title))} fontWeight={700}>
+      <g fill={palette.text} textAnchor="middle">
+        <text style={PRE} x={width / 2} y={y(layout.title.y)} fontSize={size(titleSizeFrac(t.title))} fontWeight={700}>
           {titleText(t.title)}
         </text>
         {t.subtitle && (
-          <text x={width / 2} y={y(layout.subtitle.y)} fontSize={size(layout.subtitle.size)} fontWeight={300}>
+          <text style={PRE} x={width / 2} y={y(layout.subtitle.y)} fontSize={size(layout.subtitle.size)} fontWeight={300}>
             {t.subtitle.toUpperCase()}
           </text>
         )}
         {t.showCoords && (
-          <text x={width / 2} y={y(layout.coords.y)} fontSize={size(layout.coords.size)} fillOpacity={layout.coords.alpha}>
+          <text style={PRE} x={width / 2} y={y(layout.coords.y)} fontSize={size(layout.coords.size)} fillOpacity={layout.coords.alpha}>
             {coords}
           </text>
         )}
         {t.dedication && (
           <text
+            style={PRE}
             x={width / 2}
             y={y(layout.dedication.y)}
             fontSize={size(layout.dedication.size)}
@@ -77,6 +81,7 @@ export function PosterOverlay({
           </text>
         )}
         <text
+            style={PRE}
           x={width * layout.attribution.x}
           y={y(layout.attribution.y)}
           fontSize={Math.max(size(layout.attribution.size), 6)}
@@ -98,6 +103,7 @@ export function PosterOverlay({
       {watermark &&
         [0.12, 0.32, 0.52, 0.72, 0.92].map((f) => (
           <text
+            style={PRE}
             key={f}
             x={width / 2}
             y={height * (1 - f)}

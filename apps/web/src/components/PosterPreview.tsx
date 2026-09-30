@@ -82,6 +82,7 @@ export function PosterPreview({
     if (mapRef.current) return;
     (async () => {
       const maplibregl = await import("maplibre-gl");
+      maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       if (cancelled || !mapDivRef.current) return;
       const map = new maplibregl.Map({
         container: mapDivRef.current,
@@ -100,7 +101,17 @@ export function PosterPreview({
       map.on("error", (e) => {
         if (String(e.error?.message ?? "").match(/fetch|tile|load|network/i)) setError(true);
       });
+      // Al redimensionar, MapLibre conserva el zoom y emite moveend: ese evento no debe cambiar el encuadre
+      // (el ancho en metros del póster se conserva y el efecto de encuadre recalcula el zoom).
+      let resizing = false;
+      map.on("resize", () => {
+        resizing = true;
+      });
       map.on("moveend", () => {
+        if (resizing) {
+          resizing = false;
+          return;
+        }
         const c = map.getCenter();
         const frame = {
           center: { lat: +c.lat.toFixed(6), lon: +c.lng.toFixed(6) },
@@ -178,7 +189,10 @@ export function PosterPreview({
       className="relative mx-auto w-full overflow-hidden shadow-[0_10px_40px_-12px_rgba(0,0,0,0.35)]"
       style={{ aspectRatio: `${trimW} / ${trimH}`, maxHeight, maxWidth: `calc(${maxHeight} * ${trimW / trimH})`, background: palette.bg }}
     >
-      <div ref={mapDivRef} className="absolute inset-0" />
+      {/* .maplibregl-map fuerza position:relative; por eso el contenedor del mapa va dentro de un div absoluto */}
+      <div className="absolute inset-0">
+        <div ref={mapDivRef} className="h-full w-full" />
+      </div>
       <PosterOverlay spec={spec} palette={palette} width={size.w} height={size.h} watermark={watermark} />
       {error && errorText && (
         <div className="absolute inset-x-0 top-0 bg-black/70 p-2 text-center text-xs text-white">{errorText}</div>

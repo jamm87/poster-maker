@@ -39,7 +39,8 @@ def run_job(
         outputs.append(OutputFile(key, res.content_type, res.width_px, res.height_px, len(res.data), role))
 
     if kind in ("preview", "proof"):
-        emit(kind, f"{kind}s/{job_id}.png", kind, "png", watermark)
+        # Las miniaturas de catálogo son de baja resolución; la marca de agua sólo va en la prueba exacta.
+        emit(kind, f"{kind}s/{job_id}.png", kind, "png", watermark if kind == "proof" else None)
     elif kind == "print":
         fmt = assets.get_format(spec.format_id)
         physical = assets.get_finish(finish)["physical"]
